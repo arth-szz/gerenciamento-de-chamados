@@ -16,24 +16,31 @@ import { deletaChamado } from '../services/deletaChamado.js'
 export async function chamadosRotas(app: FastifyInstance) {
   // 👑 GET - Puxa todos os chamados do sistema
 
-  app.get('/chamados', async (request, reply) => {
-    try {
-      const chamados = await buscaChamados()
+  app.get<{ Querystring: { usuarioId?: string } }>(
+    '/chamados',
+    async (request, reply) => {
+      try {
+        let usuarioId = request.query.usuarioId
 
-      return reply.status(200).send(chamados)
-    } catch (err) {
-      if (
-        err instanceof Error &&
-        err.message === 'Não há chamados no sistema'
-      ) {
+        if (usuarioId) usuarioId = validaId(usuarioId)
+
+        const chamados = await buscaChamados(usuarioId)
+
+        return reply.status(200).send(chamados)
+      } catch (err) {
+        if (
+          err instanceof Error &&
+          err.message === 'Não há chamados no sistema'
+        ) {
+          console.log(err)
+          return reply.status(404).send(err.message)
+        }
+
         console.log(err)
-        return reply.status(404).send(err.message)
+        return reply.status(500).send('Erro interno no servidor')
       }
-
-      console.log(err)
-      return reply.status(500).send('Erro interno no servidor')
-    }
-  })
+    },
+  )
 
   // GET - Filtra os chamados pelo id do usuário
 

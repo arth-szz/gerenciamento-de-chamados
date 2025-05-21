@@ -3,6 +3,7 @@
 import fastify from 'fastify'
 import { chamadosRotas } from './routes/chamados.js'
 import { respostasRotas } from './routes/respostas.js'
+import 'dotenv/config'
 
 const app = fastify()
 

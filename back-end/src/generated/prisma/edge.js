@@ -144,7 +144,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Arthur\\Documents\\gerenciamento-chamados-cap\\server\\src\\generated\\prisma",
+      "value": "C:\\Users\\Arthur\\Documents\\sistema-de-chamados\\back-end\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -158,12 +158,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Arthur\\Documents\\gerenciamento-chamados-cap\\server\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Arthur\\Documents\\sistema-de-chamados\\back-end\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.7.0",
@@ -172,11 +171,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://neondb_owner:npg_OdnMkGZ0V5bF@ep-restless-salad-act9jd6u-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require"
+        "value": null
       }
     }
   },
