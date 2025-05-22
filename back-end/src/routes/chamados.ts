@@ -1,8 +1,7 @@
 import type { FastifyInstance } from 'fastify'
-import { prisma } from '../lib/prisma.js'
 import { z } from 'zod'
 import { validaId } from '../validators/validaId.js'
-import { validaBody } from '../validators/validaBody.js'
+import { validaBodyChamados } from '../validators/validaBodyChamados.js'
 import { buscaChamados } from '../services/buscaChamados.js'
 import { buscaUsuario } from '../services/buscaUsuario.js'
 import { criaChamado } from '../services/criaChamado.js'
@@ -11,7 +10,7 @@ import { atualizaChamado } from '../services/atualizaChamado.js'
 import { deletaChamado } from '../services/deletaChamado.js'
 
 export async function chamadosRotas(app: FastifyInstance) {
-  // 👑 GET - Puxa todos os chamados do sistema
+  // GET - Puxa todos os chamados do sistema
 
   app.get<{ Querystring: { usuarioId?: string } }>(
     '/chamados',
@@ -25,9 +24,7 @@ export async function chamadosRotas(app: FastifyInstance) {
           await buscaUsuario(usuarioId)
         }
 
-        const chamados = await buscaChamados(usuarioId)
-
-        return reply.status(200).send(chamados)
+        return reply.status(200).send(await buscaChamados(usuarioId))
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
@@ -58,36 +55,15 @@ export async function chamadosRotas(app: FastifyInstance) {
     },
   )
 
-  // GET - Puxa um único chamado pelo id dele
+  // GET - Puxa um único chamado
 
   app.get<{ Params: { id: string } }>(
     '/chamado/:id',
     async (request, reply) => {
       try {
-        // Validação do id
         const idValido = validaId(request.params.id)
 
-        //  Verifica se o chamado existe
-        const chamadoExiste = await prisma.chamados.findUnique({
-          where: {
-            id: idValido,
-          },
-        })
-
-        if (!chamadoExiste) {
-          throw new Error('Este chamado não existe')
-        }
-
-        const chamado = await prisma.chamados.findUnique({
-          where: {
-            id: idValido,
-          },
-          include: {
-            Respostas: true,
-          },
-        })
-
-        return reply.status(200).send(chamado)
+        return reply.status(200).send(await buscaChamado(idValido))
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
@@ -112,7 +88,7 @@ export async function chamadosRotas(app: FastifyInstance) {
     Body: { usuarioId: string; titulo: string; descricao: string }
   }>('/chamados', async (request, reply) => {
     try {
-      validaBody(request)
+      validaBodyChamados(request)
 
       await buscaUsuario(request.body.usuarioId)
 
@@ -120,9 +96,7 @@ export async function chamadosRotas(app: FastifyInstance) {
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err)
-        return reply
-          .status(400)
-          .send('Formato de dados inválido ou campos não preenchidos')
+        return reply.status(400).send('Formato de dados inválido')
       } else if (
         err instanceof Error &&
         err.message === 'Este usuário não existe'
@@ -151,15 +125,11 @@ export async function chamadosRotas(app: FastifyInstance) {
 
       const status = statusSchema.parse(request.body.status)
 
-      const chamado = await atualizaChamado(idValido, status)
-
-      return chamado
+      return reply.status(200).send(await atualizaChamado(idValido, status))
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err)
-        return reply
-          .status(400)
-          .send('Formato de dados inválido ou campo não preenchido')
+        return reply.status(400).send('Formato de dados inválido')
       } else if (
         err instanceof Error &&
         err.message === 'Este chamado não existe'
@@ -181,23 +151,13 @@ export async function chamadosRotas(app: FastifyInstance) {
       try {
         const idValido = validaId(request.params.id)
 
-        await buscaChamado(idValido)
-
         await deletaChamado(idValido)
 
         return reply.status(200).send('Chamado excluído com sucesso!')
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
-          return reply
-            .status(400)
-            .send('Formato de id inválido ou campo não preenchido')
-        } else if (
-          err instanceof Error &&
-          err.message === 'Este chamado não existe'
-        ) {
-          console.log(err)
-          return reply.status(404).send(err.message)
+          return reply.status(400).send('Formato de id inválido')
         }
 
         console.log(err)

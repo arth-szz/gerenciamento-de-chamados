@@ -1,73 +1,135 @@
-// CRUD respostas
-
 import type { FastifyInstance } from 'fastify'
-import { prisma } from '../lib/prisma.js'
+import { validaId } from '../validators/validaId.js'
+import { validaBodyRespostas } from '../validators/validaBodyRepostas.js'
+import { buscaChamado } from '../services/buscaChamado.js'
+import { criaResposta } from '../services/criaResposta.js'
+import { buscaUsuario } from '../services/buscaUsuario.js'
+import { buscaRespostas } from '../services/buscaRespostas.js'
 import { z } from 'zod'
+import { atualizaResposta } from '../services/atualizaResposta.js'
+import { deletaResposta } from '../services/deletaResposta.js'
 
 export async function respostasRotas(app: FastifyInstance) {
-  //
-  // 👑 GET - Puxa todas as respostas á chamados do sistema e ordena pelo mais antigo primeiro
-  //
-  app.get('/respostas', async (request, reply) => {
-    const respostas = await prisma.respostas.findMany({
-      orderBy: {
-        dataEnvio: 'asc',
-      },
-    })
+  // GET - Puxa todas as respostas á chamados do sistema e ordena pelo mais antigo primeiro
 
-    return reply.status(200).send(respostas)
-  })
-  //
-  // 👑 POST - Cria uma resposta a um chamado
-  //
-  app.post('/respostas/:chamadoId', async (request, reply) => {
-    // Validação do id do chamado
-    const paramsSchema = z.object({
-      chamadoId: z.string().uuid(),
-    })
+  app.get<{ Querystring: { usuarioId?: string } }>(
+    '/respostas',
+    async (request, reply) => {
+      try {
+        let usuarioId = request.query.usuarioId
 
-    const { chamadoId } = paramsSchema.parse(request.params)
+        if (usuarioId) {
+          usuarioId = validaId(usuarioId)
 
-    // Validação do corpo da requisição
-    const bodySchema = z.object({
-      mensagem: z.string().min(1),
-    })
+          await buscaUsuario(usuarioId)
+        }
 
-    const { mensagem } = bodySchema.parse(request.body)
+        return reply.status(201).send(await buscaRespostas(usuarioId))
+      } catch (err) {
+        if (err instanceof z.ZodError) {
+          console.log(err)
+          return reply.status(400).send('Formato de id inválido')
+        } else if (
+          err instanceof Error &&
+          err.message === 'Este usuário não existe'
+        ) {
+          console.log(err)
+          return reply.status(404).send(err.message)
+        } else if (
+          err instanceof Error &&
+          err.message === 'Este usuário não possui chamados concluídos'
+        ) {
+          console.log(err)
+          return reply.status(404).send(err.message)
+        } else if (
+          err instanceof Error &&
+          err.message === 'Não há chamados concluídos no sistema'
+        ) {
+          console.log(err)
+          return reply.status(404).send(err.message)
+        }
 
-    // Verifica se o chamado existe
-    const chamado = await prisma.chamados.findUnique({
-      where: {
-        id: chamadoId,
-      },
-      select: {
-        usuarioId: true,
-      },
-    })
+        console.log(err)
+        return reply.status(500).send('Erro interno no servidor')
+      }
+    },
+  )
 
-    if (!chamado) {
-      throw new Error('Este chamado não existe')
+  // POST - Cria uma resposta a um chamado
+
+  app.post<{
+    Body: { chamadoId: string; usuarioId: string; mensagem: string }
+  }>('/respostas', async (request, reply) => {
+    try {
+      validaBodyRespostas(request.body.mensagem)
+
+      await buscaChamado(request.body.chamadoId)
+
+      await buscaUsuario(request.body.usuarioId)
+
+      return reply.status(200).send(await criaResposta(request))
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        console.log(err)
+        return reply.status(400).send('Formato de campo inválido')
+      } else if (
+        err instanceof Error &&
+        err.message === 'Este chamado não existe'
+      ) {
+        console.log(err)
+        return reply.status(404).send(err.message)
+      }
+
+      console.log(err)
+      return reply.status(500).send('Erro interno no servidor')
     }
-
-    const usuarioId = chamado.usuarioId
-
-    const resposta = await prisma.respostas.create({
-      data: {
-        chamadoId,
-        usuarioId,
-        mensagem,
-      },
-    })
-
-    return reply.status(200).send(resposta)
   })
-  //
-  // PUT
-  //
-  app.put('/respostas/:id', () => {})
 
-  //
+  // PUT
+
+  app.put<{
+    Body: { mensagem: string }
+    Params: { id: string }
+  }>('/respostas/:id', async (request, reply) => {
+    try {
+      const id = validaId(request.params.id)
+
+      validaBodyRespostas(request.body.mensagem)
+
+      return reply
+        .status(200)
+        .send(await atualizaResposta(id, request.body.mensagem))
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        console.log(err)
+        return reply.status(400).send('Formato de campo inválido')
+      }
+
+      console.log(err)
+      return reply.status(500).send('Erro interno no servidor')
+    }
+  })
+
   // DELETE
-  //
-  app.delete('/respostas/:id', () => {})
+
+  app.delete<{ Params: { id: string } }>(
+    '/respostas/:id',
+    async (request, reply) => {
+      try {
+        const id = validaId(request.params.id)
+
+        await deletaResposta(id)
+
+        return reply.status(200).send('Resposta apagada com sucesso!')
+      } catch (err) {
+        if (err instanceof z.ZodError) {
+          console.log(err)
+          return reply.status(400).send('Formato de campo inválido')
+        }
+
+        console.log(err)
+        return reply.status(500).send('Erro interno no servidor')
+      }
+    },
+  )
 }

@@ -5,6 +5,9 @@ export async function buscaChamado(id: string) {
     where: {
       id,
     },
+    include: {
+      Respostas: true,
+    },
   })
 
   if (!chamado) throw new Error('Este chamado não existe')

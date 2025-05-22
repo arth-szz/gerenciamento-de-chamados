@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { FastifyRequest } from 'fastify'
 
-export function validaBody(
+export function validaBodyChamados(
   request: FastifyRequest<{
     Body: { usuarioId: string; titulo: string; descricao: string }
   }>,
