@@ -1,9 +1,6 @@
-// CRUD para chamados
-
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { z } from 'zod'
-import type { Chamados } from '../generated/prisma/index.js'
 import { validaId } from '../validators/validaId.js'
 import { validaBody } from '../validators/validaBody.js'
 import { buscaChamados } from '../services/buscaChamados.js'
@@ -22,60 +19,15 @@ export async function chamadosRotas(app: FastifyInstance) {
       try {
         let usuarioId = request.query.usuarioId
 
-        if (usuarioId) usuarioId = validaId(usuarioId)
+        if (usuarioId) {
+          usuarioId = validaId(usuarioId)
+
+          await buscaUsuario(usuarioId)
+        }
 
         const chamados = await buscaChamados(usuarioId)
 
         return reply.status(200).send(chamados)
-      } catch (err) {
-        if (
-          err instanceof Error &&
-          err.message === 'Não há chamados no sistema'
-        ) {
-          console.log(err)
-          return reply.status(404).send(err.message)
-        }
-
-        console.log(err)
-        return reply.status(500).send('Erro interno no servidor')
-      }
-    },
-  )
-
-  // GET - Filtra os chamados pelo id do usuário
-
-  app.get<{ Params: { usuarioId: string } }>(
-    '/chamados/:usuarioId',
-    async (request, reply) => {
-      try {
-        // Valida o usuarioId
-        const idValido = validaId(request.params.usuarioId)
-
-        // Verifica se o usuário existe
-        await buscaUsuario(idValido)
-
-        // Verifica se o chamado existe
-        const buscaChamado = await prisma.chamados.findMany({
-          where: {
-            usuarioId: idValido,
-          },
-        })
-
-        if (buscaChamado.length === 0) {
-          throw new Error('Este usuário não possui chamados')
-        }
-
-        const chamados = buscaChamado
-
-        return reply.status(200).send(
-          chamados.map((chamado: Chamados) => {
-            return {
-              titulo: chamado.titulo,
-              status: chamado.status,
-              dataCriacao: chamado.dataCriacao,
-            }
-          }),
-        )
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
@@ -89,6 +41,12 @@ export async function chamadosRotas(app: FastifyInstance) {
         } else if (
           err instanceof Error &&
           err.message === 'Este usuário não possui chamados'
+        ) {
+          console.log(err)
+          return reply.status(404).send(err.message)
+        } else if (
+          err instanceof Error &&
+          err.message === 'Não há chamados no sistema'
         ) {
           console.log(err)
           return reply.status(404).send(err.message)
@@ -129,7 +87,7 @@ export async function chamadosRotas(app: FastifyInstance) {
           },
         })
 
-        return chamado
+        return reply.status(200).send(chamado)
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
@@ -184,7 +142,7 @@ export async function chamadosRotas(app: FastifyInstance) {
     Body: { status: string }
     Params: { id: string }
   }>('/chamados/:id', async (request, reply) => {
-    const statusSchema = z.string()
+    const statusSchema = z.enum(['Aberto', 'EmAndamento', 'Concluido'])
 
     try {
       const idValido = validaId(request.params.id)

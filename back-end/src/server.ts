@@ -1,5 +1,3 @@
-// Arquivo principal, servidor roda aqui
-
 import fastify from 'fastify'
 import { chamadosRotas } from './routes/chamados.js'
 import { respostasRotas } from './routes/respostas.js'

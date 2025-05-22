@@ -18,11 +18,17 @@ model Usuarios {
   Respostas Respostas[]
 }
 
+enum Status {
+  Aberto      @map("Aberto")
+  EmAndamento @map("Em andamento")
+  Concluido   @map("Concluído")
+}
+
 model Chamados {
   id          String      @id @default(uuid())
   titulo      String
   descricao   String
-  status      String      @default("Aberto")
+  status      Status      @default(Aberto)
   dataCriacao DateTime    @default(now())
   usuarioId   String
   usuarios    Usuarios    @relation(fields: [usuarioId], references: [id])

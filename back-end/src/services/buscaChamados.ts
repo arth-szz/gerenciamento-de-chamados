@@ -1,8 +1,7 @@
 import { prisma } from '../lib/prisma'
-import type { Chamados } from '../generated/prisma'
 
 export async function buscaChamados(usuarioId?: string) {
-  let chamados: Chamados[]
+  let chamados
 
   if (usuarioId) {
     chamados = await prisma.chamados.findMany({
@@ -13,16 +12,20 @@ export async function buscaChamados(usuarioId?: string) {
         dataCriacao: 'asc',
       },
     })
+
+    if (chamados.length === 0) {
+      throw new Error('Este usuário não possui chamados')
+    }
   } else {
     chamados = await prisma.chamados.findMany({
       orderBy: {
         dataCriacao: 'asc',
       },
     })
-  }
 
-  if (chamados.length === 0) {
-    throw new Error('Não há chamados no sistema')
+    if (chamados.length === 0) {
+      throw new Error('Não há chamados no sistema')
+    }
   }
 
   return chamados
