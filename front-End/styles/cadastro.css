@@ -8,31 +8,35 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     overflow: hidden;
-    background: linear-gradient(to bottom, #1f1c14, #726e64);
+    background: #fff;
     position: relative;
 }
 
 .container {
     width: 400px;
-    background-color: transparent;
-    border: 2px solid rgba(255, 255, 255, .2);
-    border-radius: 10px;
-    color: #fff;
-    padding: 30px 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    background-color: #D9D9D9;
+    border: 1px solid rgba(128, 128, 129, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(128, 128, 129, 0.2);
+    color: #000000;
+    border-radius: 16px;
+    padding: 35px;
 
 }
 
 .container h1 {
-    font-size: 36px;
+    font-size: 28px;
     text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .name-fields {
@@ -42,7 +46,7 @@ body {
 }
 
 .name-fields .input-box {
-    flex: 1;               
+    flex: 1;             
 }
 
 .input-box {
@@ -62,4 +66,10 @@ body {
     border: none;
     border-radius: 10px;
     box-shadow: 1px 1px 6px #0000001c;
+}
+
+.input-box i {
+    position: absolute;
+    right: 400px;
+    
 }

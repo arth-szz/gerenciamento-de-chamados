@@ -2,12 +2,12 @@ import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { validaId } from '../validators/validaId.js'
 import { validaBodyChamados } from '../validators/validaBodyChamados.js'
-import { buscaChamados } from '../services/buscaChamados.js'
-import { buscaUsuario } from '../services/buscaUsuario.js'
-import { criaChamado } from '../services/criaChamado.js'
-import { buscaChamado } from '../services/buscaChamado.js'
-import { atualizaChamado } from '../services/atualizaChamado.js'
-import { deletaChamado } from '../services/deletaChamado.js'
+import { buscaChamados } from '../services/chamados/buscaChamados.js'
+import { buscaUsuario } from '../services/usuarios/buscaUsuario.js'
+import { criaChamado } from '../services/chamados/criaChamado.js'
+import { buscaChamado } from '../services/chamados/buscaChamado.js'
+import { atualizaChamado } from '../services/chamados/atualizaChamado.js'
+import { deletaChamado } from '../services/chamados/deletaChamado.js'
 
 export async function chamadosRotas(app: FastifyInstance) {
   // GET - Puxa todos os chamados do sistema

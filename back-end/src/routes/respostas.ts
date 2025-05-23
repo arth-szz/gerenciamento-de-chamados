@@ -1,13 +1,13 @@
 import type { FastifyInstance } from 'fastify'
 import { validaId } from '../validators/validaId.js'
 import { validaBodyRespostas } from '../validators/validaBodyRepostas.js'
-import { buscaChamado } from '../services/buscaChamado.js'
-import { criaResposta } from '../services/criaResposta.js'
-import { buscaUsuario } from '../services/buscaUsuario.js'
-import { buscaRespostas } from '../services/buscaRespostas.js'
+import { buscaChamado } from '../services/chamados/buscaChamado.js'
+import { criaResposta } from '../services/respostas/criaResposta.js'
+import { buscaUsuario } from '../services/usuarios/buscaUsuario.js'
+import { buscaRespostas } from '../services/respostas/buscaRespostas.js'
 import { z } from 'zod'
-import { atualizaResposta } from '../services/atualizaResposta.js'
-import { deletaResposta } from '../services/deletaResposta.js'
+import { atualizaResposta } from '../services/respostas/atualizaResposta.js'
+import { deletaResposta } from '../services/respostas/deletaResposta.js'
 
 export async function respostasRotas(app: FastifyInstance) {
   // GET - Puxa todas as respostas á chamados do sistema e ordena pelo mais antigo primeiro
@@ -24,7 +24,7 @@ export async function respostasRotas(app: FastifyInstance) {
           await buscaUsuario(usuarioId)
         }
 
-        return reply.status(201).send(await buscaRespostas(usuarioId))
+        return reply.status(200).send(await buscaRespostas(usuarioId))
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)

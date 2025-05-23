@@ -5,36 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../styles/login.css">
 </head>
 <body>
+    <header>
+      <nav class="navbar">
+        <p>UniClass</p>
+      </nav>
+    </header>
+
     <div class="formulario">
-        <h1>Login</h1>
-        <form action="#">
+        <h1>LOGIN</h1>
+        <form id="login-form" action="#">
         <div class="caixa-formulario">
-          <input type="text" placeholder="Nome do Usuario">
+          <input id="email" type="email" placeholder="Digite seu e-mail" required>
           <i class='bx bxs-user'></i>
         </div>
         
         <div class="caixa-formulario">
-          <input type="password" placeholder="Senha">
+          <input id="password" type="password" placeholder="Digite sua senha" required>
           <i class='bx bxs-lock-alt'></i>
         </div>
 
         <div class="caixa-lembrar-esqueci">
           <label><input type="checkbox">Lembrar</label>
-          <a href="#">Esqueceu a Senha?</a>
+          <a href="recuperar.html">Esqueceu a Senha?</a>
         </div>
-
+        
           <button type="submit">Enviar</button>
-          <br class="link-registro">
-          <p>Não tem conta? <a href="#">Registrar</a></p>
 
-          <a href="cadastro.html">Cadastro</a><br>
-          <a href="recuperar.html">Recuperar Senha</a><br>
-          <a href="aberturaChamado.html">Abertura de Chamado</a><br>
+        <div class="registro">
+          <p>Não tem conta? <a href="cadastro.html">Registrar</a></p>
         </div>
         </form>
     </div>
+    <script src="../scripts/login.js"></script>
+
+    <footer>
+      
+    </footer>
 </body>
 </html>

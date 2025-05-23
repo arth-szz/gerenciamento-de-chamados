@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="../styles/cadastro.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <main class="container">
+        <form>
+            <h1>Cadastro</h1><br><br>
+         <div class="input-group">
+             <div class="name-fields">
+                 <div class="input-box">
+                    <label for="firstname"></label>
+                    <input id="firstname" type="text" name="firstname" placeholder="Nome" required class="meu-input">
+                    <i class='bx bx-user'></i>
+                 </div>
+                 <div class="input-box">
+                    <label for="lastname"></label>
+                    <input id="lastname" type="text" name="lastname" placeholder="Sobrenome" required class="meu-input">
+                 </div>
+                 </div>
+
+                 <div class="input-box">
+                    <label for="email"></label>
+                    <input id="email" type="email" name="email" placeholder="E-mail" required class="meu-input">
+                    <i class='bx bx-envelope'></i>
+                 </div>
+                <div class="input-box">
+                    <label for="password"></label>
+                    <input id="password" type="password" name="password" placeholder="Senha" required class="meu-input">
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+         </div>  
+           <button type="submit">Cadastrar</button>
+        </form>
+    </main>
+</body>
+</html>

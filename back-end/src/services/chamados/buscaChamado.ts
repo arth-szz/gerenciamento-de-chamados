@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma'
+import { prisma } from '../../lib/prisma'
 
 export async function buscaChamado(id: string) {
   const chamado = await prisma.chamados.findUnique({
