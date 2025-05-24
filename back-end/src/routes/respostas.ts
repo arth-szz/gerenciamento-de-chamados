@@ -28,29 +28,29 @@ export async function respostasRotas(app: FastifyInstance) {
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
-          return reply.status(400).send('Formato de id inválido')
+          return reply.status(400).send({ message: 'Formato de id inválido' })
         } else if (
           err instanceof Error &&
           err.message === 'Este usuário não existe'
         ) {
           console.log(err)
-          return reply.status(404).send(err.message)
+          return reply.status(404).send({ message: err.message })
         } else if (
           err instanceof Error &&
           err.message === 'Este usuário não possui chamados concluídos'
         ) {
           console.log(err)
-          return reply.status(404).send(err.message)
+          return reply.status(404).send({ message: err.message })
         } else if (
           err instanceof Error &&
           err.message === 'Não há chamados concluídos no sistema'
         ) {
           console.log(err)
-          return reply.status(404).send(err.message)
+          return reply.status(404).send({ message: err.message })
         }
 
         console.log(err)
-        return reply.status(500).send('Erro interno no servidor')
+        return reply.status(500).send({ message: 'Erro interno no servidor' })
       }
     },
   )
@@ -71,17 +71,17 @@ export async function respostasRotas(app: FastifyInstance) {
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err)
-        return reply.status(400).send('Formato de campo inválido')
+        return reply.status(400).send({ message: 'Formato de campo inválido' })
       } else if (
         err instanceof Error &&
         err.message === 'Este chamado não existe'
       ) {
         console.log(err)
-        return reply.status(404).send(err.message)
+        return reply.status(404).send({ message: err.message })
       }
 
       console.log(err)
-      return reply.status(500).send('Erro interno no servidor')
+      return reply.status(500).send({ message: 'Erro interno no servidor' })
     }
   })
 
@@ -102,11 +102,11 @@ export async function respostasRotas(app: FastifyInstance) {
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err)
-        return reply.status(400).send('Formato de campo inválido')
+        return reply.status(400).send({ message: 'Formato de campo inválido' })
       }
 
       console.log(err)
-      return reply.status(500).send('Erro interno no servidor')
+      return reply.status(500).send({ message: 'Erro interno no servidor' })
     }
   })
 
@@ -120,15 +120,19 @@ export async function respostasRotas(app: FastifyInstance) {
 
         await deletaResposta(id)
 
-        return reply.status(200).send('Resposta apagada com sucesso!')
+        return reply
+          .status(200)
+          .send({ message: 'Resposta apagada com sucesso!' })
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
-          return reply.status(400).send('Formato de campo inválido')
+          return reply
+            .status(400)
+            .send({ message: 'Formato de campo inválido' })
         }
 
         console.log(err)
-        return reply.status(500).send('Erro interno no servidor')
+        return reply.status(500).send({ message: 'Erro interno no servidor' })
       }
     },
   )

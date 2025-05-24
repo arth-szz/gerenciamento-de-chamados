@@ -8,12 +8,14 @@ import { criaChamado } from '../services/chamados/criaChamado.js'
 import { buscaChamado } from '../services/chamados/buscaChamado.js'
 import { atualizaChamado } from '../services/chamados/atualizaChamado.js'
 import { deletaChamado } from '../services/chamados/deletaChamado.js'
+import { autenticar } from '../middleware/autenticar.js'
 
 export async function chamadosRotas(app: FastifyInstance) {
   // GET - Puxa todos os chamados do sistema
 
   app.get<{ Querystring: { usuarioId?: string } }>(
     '/chamados',
+    { preHandler: [autenticar] },
     async (request, reply) => {
       try {
         let usuarioId = request.query.usuarioId
@@ -24,33 +26,35 @@ export async function chamadosRotas(app: FastifyInstance) {
           await buscaUsuario(usuarioId)
         }
 
-        return reply.status(200).send(await buscaChamados(usuarioId))
+        const chamados = await buscaChamados(usuarioId)
+
+        return reply.status(200).send(chamados)
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
-          return reply.status(400).send('Formato de id inválido')
+          return reply.status(400).send({ message: 'Formato de id inválido' })
         } else if (
           err instanceof Error &&
           err.message === 'Este usuário não existe'
         ) {
           console.log(err)
-          return reply.status(404).send(err.message)
+          return reply.status(404).send({ message: err.message })
         } else if (
           err instanceof Error &&
           err.message === 'Este usuário não possui chamados'
         ) {
           console.log(err)
-          return reply.status(404).send(err.message)
+          return reply.status(404).send({ message: err.message })
         } else if (
           err instanceof Error &&
           err.message === 'Não há chamados no sistema'
         ) {
           console.log(err)
-          return reply.status(404).send(err.message)
+          return reply.status(404).send({ message: err.message })
         }
 
         console.log(err)
-        return reply.status(500).send('Erro interno no servidor')
+        return reply.status(500).send({ message: 'Erro interno no servidor' })
       }
     },
   )
@@ -67,17 +71,17 @@ export async function chamadosRotas(app: FastifyInstance) {
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
-          return reply.status(400).send('Formato de id inválido')
+          return reply.status(400).send({ message: 'Formato de id inválido' })
         } else if (
           err instanceof Error &&
           err.message === 'Este chamado não existe'
         ) {
           console.log(err)
-          return reply.status(404).send(err.message)
+          return reply.status(404).send({ message: err.message })
         }
 
         console.log(err)
-        return reply.status(500).send('Erro interno no servidor')
+        return reply.status(500).send({ message: 'Erro interno no servidor' })
       }
     },
   )
@@ -96,17 +100,17 @@ export async function chamadosRotas(app: FastifyInstance) {
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err)
-        return reply.status(400).send('Formato de dados inválido')
+        return reply.status(400).send({ message: 'Formato de dados inválido' })
       } else if (
         err instanceof Error &&
         err.message === 'Este usuário não existe'
       ) {
         console.log(err)
-        return reply.status(400).send(err.message)
+        return reply.status(400).send({ message: err.message })
       }
 
       console.log(err)
-      return reply.status(500).send({ erro: 'Erro interno no servidor' })
+      return reply.status(500).send({ message: 'Erro interno no servidor' })
     }
   })
 
@@ -129,17 +133,17 @@ export async function chamadosRotas(app: FastifyInstance) {
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err)
-        return reply.status(400).send('Formato de dados inválido')
+        return reply.status(400).send({ message: 'Formato de dados inválido' })
       } else if (
         err instanceof Error &&
         err.message === 'Este chamado não existe'
       ) {
         console.log(err)
-        return reply.status(404).send(err.message)
+        return reply.status(404).send({ message: err.message })
       }
 
       console.log(err)
-      return reply.status(500).send('Erro interno no servidor')
+      return reply.status(500).send({ message: 'Erro interno no servidor' })
     }
   })
 
@@ -157,11 +161,11 @@ export async function chamadosRotas(app: FastifyInstance) {
       } catch (err) {
         if (err instanceof z.ZodError) {
           console.log(err)
-          return reply.status(400).send('Formato de id inválido')
+          return reply.status(400).send({ message: 'Formato de id inválido' })
         }
 
         console.log(err)
-        return reply.status(500).send('Erro interno no servidor')
+        return reply.status(500).send({ message: 'Erro interno no servidor' })
       }
     },
   )

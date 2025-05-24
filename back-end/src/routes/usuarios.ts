@@ -61,7 +61,7 @@ export async function usuariosRotas(app: FastifyInstance) {
         )
 
         // Retorna os dados do login
-        return reply.status(200).send({
+        return reply.status(201).send({
           token,
           usuario: {
             id: usuario.id,
