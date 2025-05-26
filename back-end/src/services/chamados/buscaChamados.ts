@@ -1,12 +1,13 @@
+import type { FastifyRequest } from 'fastify'
 import { prisma } from '../../lib/prisma'
 
-export async function buscaChamados(usuarioId?: string) {
+export async function buscaChamados(request: FastifyRequest) {
   let chamados
 
-  if (usuarioId) {
+  if (request.user.ehAdm !== true) {
     chamados = await prisma.chamados.findMany({
       where: {
-        usuarioId,
+        usuarioId: request.user.id,
       },
       orderBy: {
         dataCriacao: 'asc',

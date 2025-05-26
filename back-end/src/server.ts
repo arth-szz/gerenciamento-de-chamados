@@ -1,10 +1,10 @@
 import fastify from 'fastify'
 import cors from '@fastify/cors'
-import { chamadosRotas } from './routes/chamados.js'
-import { respostasRotas } from './routes/respostas.js'
 import 'dotenv/config'
-import { usuariosRotas } from './routes/usuarios.js'
 import decorateRequest from './plugins/decorateRequest.js'
+import { autenticacaoRotas } from './routes/autenticacaoRotas.js'
+import { usuariosRotas } from './routes/usuariosRotas.js'
+import { adminRotas } from './routes/adminRotas.js'
 
 const app = fastify()
 
@@ -14,9 +14,9 @@ app.register(cors, {
 
 app.register(decorateRequest)
 
-app.register(chamadosRotas)
-app.register(respostasRotas)
+app.register(autenticacaoRotas)
 app.register(usuariosRotas)
+app.register(adminRotas)
 
 app
   .listen({

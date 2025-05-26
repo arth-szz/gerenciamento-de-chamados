@@ -3,16 +3,34 @@ import { prisma } from '../../lib/prisma'
 
 export async function criaResposta(
   request: FastifyRequest<{
-    Body: { chamadoId: string; usuarioId: string; mensagem: string }
+    Body: { chamadoId: string; mensagem: string }
   }>,
 ) {
-  const resposta = await prisma.respostas.create({
+  await prisma.respostas.create({
     data: {
       chamadoId: request.body.chamadoId,
-      usuarioId: request.body.usuarioId,
+      usuarioId: request.user.id,
       mensagem: request.body.mensagem,
     },
   })
 
-  return resposta
+  await prisma.chamados.update({
+    where: {
+      id: request.body.chamadoId,
+    },
+    data: {
+      status: 'Concluido',
+    },
+  })
+
+  const chamadoRespondido = await prisma.chamados.findUnique({
+    where: {
+      id: request.body.chamadoId,
+    },
+    include: {
+      Respostas: true,
+    },
+  })
+
+  return chamadoRespondido
 }

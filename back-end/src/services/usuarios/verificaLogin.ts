@@ -2,7 +2,7 @@ import type { FastifyRequest } from 'fastify'
 import { prisma } from '../../lib/prisma'
 import bcrypt from 'bcrypt'
 
-export async function verificaDadosLogin(
+export async function verificaLogin(
   request: FastifyRequest<{
     Body: { email: string; senha: string }
   }>,
@@ -18,4 +18,6 @@ export async function verificaDadosLogin(
   const senhaCorreta = await bcrypt.compare(request.body.senha, usuario.senha)
 
   if (!senhaCorreta) throw new Error('E-mail ou senha inválidos')
+
+  return usuario
 }

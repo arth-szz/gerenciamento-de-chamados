@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhar Chamados</title>
+    <link rel="stylesheet" href="../styles/acompanhar-chamados.css">
+    <script src="../scripts/proteger-pagina.js"></script>
+</head>
+<body>
+   <header>
+        <nav class="navbar">
+            <a href="inicio.html" class="nav-logo">UniClass</a>
+
+            <ul class="nav-menu">
+                <li class="nav-sub-item">
+                    <a href="#" class="nav-chamados">Chamados <i class='bx bx-chevron-down arrow-down'></i></a>
+                    <ul class="nav-submenu">
+                        <li class="nav-sub-chamados"><a href="abertura-chamado.html">Abrir Chamado</a></li>
+                        <li class="nav-sub-chamados"><a href="#">Acompanhar Chamados</a></li>
+                    </ul>
+                </li>
+                <li class="nav-pag"><a href="sobre-nos.html">Sobre Nós</a></li>
+                <li class="nav-pag"><a href="ajuda.html">Ajuda</a></li>
+                <li class="nav-pag"><a href="#" id="logout-link">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Meus Chamados</h1>
+
+        <table id="tabela-chamados">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Status</th>
+                    <th>Data de Criação</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            <!-- Os chamados serão inseridos aqui via JS -->
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <div id="footer-conteudo">
+            <ul class="footer-lista">
+                <li><a href="inicio.html" class="footer-link">Inicio</a></li>
+                <li><a href="abertura-chamado.html" class="footer-link">Abrir Chamado</a></li>
+                <li><a href="#" class="footer-link">Acompanhar Chamados</a></li>
+                <li><a href="ajuda.html" class="footer-link">Ajuda</a></li>
+                <li><a href="sobre-nos.html" class="footer-link">Sobre nós</a></li>
+            </ul>
+        </div>
+        
+        <div id="footer-copyright">
+            UniClass
+            &#169
+            2025 all rights reserved
+        </div>
+
+    </footer>
+
+  <script src="../scripts/acompanhar-chamados.js"></script>
+  <script src="../scripts/logout.js"></script>
+</body>
+</html>

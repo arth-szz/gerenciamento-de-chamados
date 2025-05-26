@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redefinição de Senha</title>
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="../styles/redefinir-senha.css">
+    <script src="../scripts/proteger-pagina.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <p>UniClass</p>
+        </nav>
+    </header>
+    
+    <div class="formulario">
+        <h1>REDEFINA SUA SENHA</h1>
+
+        <form id="redefinir-form">
+            <div class="caixa-formulario">
+                <input id="nova-senha" type="password" placeholder="Digite sua nova senha" required>
+                <i class="bx bxs-user"></i>
+            </div>
+            <div class="caixa-formulario">
+                <input id="confirmar-senha" type="password" placeholder="Repita sua nova senha" required>
+                <i class="bx bxs-lock-alt"></i>
+            </div>
+                <button type="submit">Enviar</button>
+        </form>
+
+        <div class="outrapag">
+            <p>Não tem conta? <a href="cadastro.html">Cadastro</a></p>
+            <p>Já tem conta? <a href="login.html">Login</a></p>
+        </div>
+    </div>
+    
+    <script src="../scripts/redefinir-senha.js"></script>
+</body>
+</html>

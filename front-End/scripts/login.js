@@ -20,11 +20,9 @@ document
         const data = await response.json()
         alert('Login realizado com sucesso!')
 
-        // Salva o token no localStorage
         localStorage.setItem('token', data.token)
 
-        // Redireciona para a página principal
-        window.location.href = 'aberturaChamado.html'
+        window.location.href = 'inicio.html'
       } else {
         const error = await response.json()
         alert(`Erro: ${error.message}`)

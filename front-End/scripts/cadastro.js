@@ -9,8 +9,13 @@ document
     const email = document.querySelector('#email').value
     const senha = document.querySelector('#password').value
 
+    if (senha.length < 6) {
+      alert('A senha deve ter pelo menos 6 caracteres.')
+      return
+    }
+
     try {
-      const response = await fetch('http://localhost:5000/usuarios', {
+      const response = await fetch('http://localhost:5000/cadastro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

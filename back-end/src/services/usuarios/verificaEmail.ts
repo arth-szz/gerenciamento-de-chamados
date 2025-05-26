@@ -5,7 +5,5 @@ export async function verificaEmail(email: string) {
     where: { email },
   })
 
-  if (usuarioExistente) throw new Error('E-mail já cadastrado')
-
-  return true
+  return usuarioExistente
 }
